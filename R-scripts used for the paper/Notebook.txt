@@ -61,6 +61,7 @@ R - libraries used:
   write_csv(df_merged, "your_data_path")
 
 #Ridgeline Plot Analysis of Adiposity Phenotypes
+
     # Load dataset from a specified path
     data_ridge <- read.csv("C:/path_to_file/your_data.csv")
     # Remove rows with missing values
@@ -97,14 +98,7 @@ R - libraries used:
       labs(title = "BMI and MRI assessed adiposity") +
       theme(plot.title = element_text(size = 6))
     print(gg2)
-    
-    # Normalize values of selected variables using a custom RankNorm function
-    data_ridge$var_11 <- RankNorm(data_ridge$var_11)
-    data_ridge$var_12 <- RankNorm(data_ridge$var_12)
-    data_ridge$var_13 <- RankNorm(data_ridge$var_13)
-    data_ridge$var_14 <- RankNorm(data_ridge$var_14)
-    data_ridge$var_15 <- RankNorm(data_ridge$var_15)
-    
+        
     # Prepare data for a third ridgeline plot, focusing on normalized variables
     your_data_long_3 <- gather(data_ridge, key = "var_1", value = "var_2", -var_3, -var_4, -var_5, -var_6, -var_7, -var_8, -var_9, -var_10)
     # Display column names of the reshaped data frame
@@ -119,12 +113,7 @@ R - libraries used:
       labs(title = "Adiposity phenotypes (normalized)") +
       theme(plot.title = element_text(size = 6))
     print(gg3)
-    
-    # Further normalization of BMI and other body fat mass measurements
-    data_ridge$var_8 <- RankNorm(data_ridge$var_8)
-    data_ridge$var_9 <- RankNorm(data_ridge$var_9)
-    data_ridge$var_10 <- RankNorm(data_ridge$var_10)
-    
+        
     # Prepare data for the fourth ridgeline plot, excluding a different set of variables
     your_data_long_4 <- gather(data_ridge, key = "var_1", value = "var_2", -var_3, -var_4, -var_5, -var_6, -var_7, -var_11, -var_12, -var_13, -var_14, -var_15)
     # Display column names of the reshaped data frame for the fourth plot
@@ -149,10 +138,6 @@ R - libraries used:
       labs(title = "Android and gynoid adipose tissue deposition") +
       theme(plot.title = element_text(size = 6))
     print(gg5)
-    
-    # Normalize android and gynoid fat mass in the dataset
-    data_angy_na$var_16 <- RankNorm(data_angy_na$var_16)
-    data_angy_na$var_17 <- RankNorm(data_angy_na$var_17)
     
     # Prepare data for the sixth ridgeline plot
     your_data_long_6 <- gather(data_angy_na, key = "var_1", value = "var_2", -var_6, -var_7)
@@ -182,7 +167,46 @@ R - libraries used:
     # Arrange multiple plots in a grid, adjusting the layout to fit all plots cohesively
     combined_plot <- grid.arrange(gg1, gg3, gg2, gg4, gg5, gg6, ncol = 2, nrow = 3)
 
-#Analisys of adiposity phenotype impact on cardiac aging
+#Scatter plot grid for adiposity and biomarker phenotypes 
+
+    # Read and prepare your dataset
+    df.sc <- read_csv("your data.csv") %>% na.omit()
+    
+    # Function to create plots for each adiposity feature
+    create_adiposity_plots <- function(df, adiposity_features, y_limits, labels) {
+      plots <- map2(adiposity_features, y_limits, ~{
+        ggplot(df) +
+          geom_jitter(aes_string(x = "age_at_mri", y = .x, color = "factor(sex)"), shape = 16, size = 1.5, alpha = 0.1) +
+          geom_smooth(aes_string(x = "age_at_mri", y = .x), method = "lm", size = 0.5, color = "black") +
+          geom_density2d(aes_string(x = "age_at_mri", y = .x), alpha = 1, color = "black") +
+          ylim(.y) +
+          labs(x = "Age (years)", y = labels[[.x]], color = "Sex") +
+          scale_color_viridis_d() +
+          theme_minimal() +
+          theme(panel.grid = element_blank(), panel.background = element_blank())
+      })
+      return(plots)
+    }
+    
+    # Specify adiposity features and limits
+    adiposity_features <- c("Visceral_adipose_tissue_volume", "Subcutaneous_fat_body", "Trunk_fat_mass", "Whole_body_fat_mass", "Muscle_fat_infiltration", "Total_abdominal_adipose_tissue_index")
+    y_limits <- list(c(0, 15), c(0, 25), c(0, 42), c(0, 80), c(0, 21), c(0, 14))
+    labels <- setNames(c("VAT", "ASAT", "TTFM", "WBFM", "MFI", "TAAT"), adiposity_features)
+    
+    # Create and print adiposity plots
+    adiposity_plots <- create_adiposity_plots(df.sc, adiposity_features, y_limits, labels)
+    print(adiposity_plots)
+    
+    # Create a function for biochemical and endocrine biomarker plots if needed, following a similar pattern.
+    # Combine plots using patchwork or grid.arrange as needed. For example:
+    combined_plot <- reduce(adiposity_plots, `+`) + plot_layout(ncol = 3)
+    print(combined_plot)
+    
+    # Note: Specific details for biochemical_endocrine_biomarkers_m and biochemical_endocrine_biomarkers_f are omitted for brevity.
+    # Adapt the create_adiposity_plots function similarly for these datasets.
+
+#Analisys for adiposity phenotype impact on cardiac aging
+
     # Analyze the effect of adiposity phenotypes, age, age squared, and sex-specific BMI interaction on cardiovascular aging using linear regression
     fitobes <- lm(ca_delta ~ adiposity phenotype of choice + age_at_mri + poly(age_at_mri, 2) + sex_BMI, fat.peri)
     summary(fitobes) # Display summary statistics of the model
@@ -197,8 +221,7 @@ R - libraries used:
     fitobes_male <- lm(ca_delta ~ poly(age_at_mri, 2) + I(1-sex_BMI)*BMI, fat.peri) # Interaction term adjusted for males
     summary(fitobes_male) # Summary for male-specific model
     confint(fitobes_male, level = .95) # 95% confidence intervals for male-specific model
-  
-  # Note: Complete analysis sequence for each adiposity phenotype
+    # Note: Complete analysis sequence for each adiposity phenotype
 
     # Extracting tidy output with confidence intervals for various models
     out_conf4 <- tidy(fitobes, conf.int = TRUE)
@@ -223,8 +246,8 @@ R - libraries used:
     # Clean the 'term' column by removing digits
     lm_intermediate_overall$term <-  str_replace_all(lm_intermediate_overall$term, "[:digit:]", "")
     
-
 #Creating a forest plot
+
     # 'lm_intermediate_overall' is assumed to be a dataset containing regression analysis results from previous script
     forestlm_ <- ggplot(lm_intermediate_overall, aes(x = term, y = estimate, ymin = conf.low, ymax = conf.high, fill = group, col = group)) + 
       geom_errorbar(linewidth = 0.5, position = position_dodge(width = 0.5), width = 0) + # Draws error bars for confidence intervals
@@ -260,30 +283,163 @@ R - libraries used:
                 hjust = 1, position=position_dodge(width = 0.5)
       ) +
       coord_flip() + # Flips the coordinates to align with the main forest plot
-  theme( legend.position = "none", # Hides the legend
-         panel.background = element_blank(), # Removes background
-         panel.grid.major = element_blank(), # Removes major grid lines
-         panel.grid.minor = element_blank(), # Removes minor grid lines
-         axis.text.x  = element_text(size=0.005, color='white'), # Makes x-axis text invisible
-         axis.text.y  = element_text(size=0.005, color='white'), # Makes y-axis text invisible
-         axis.line.x = element_line(size = 0.8, linetype = "solid", color="white"), # Makes x-axis line invisible
-         axis.line.y = element_blank(), # Removes y-axis line
-         axis.title.x  = element_text(size=0.005, vjust=0.3, face="plain", color = 'white'), # Makes x-axis title invisible
-         axis.title.y  = element_text(size=0.005, face = "plain", vjust=0.9, angle = 90, colour = 'white'), # Makes y-axis title invisible
-         axis.ticks.x = element_line(color="white"), # Makes x-axis ticks invisible
-         axis.ticks.y = element_line(color="white"), # Makes y-axis ticks invisible
-         panel.border = element_blank(), # Removes panel border
-         panel.spacing = unit(c(0, 0, 0, 0), "null"), # Adjusts panel spacing
-         plot.margin = margin(l = 0,r=0) # Adjusts plot margins
-)
+      theme( legend.position = "none", # Hides the legend
+             panel.background = element_blank(), # Removes background
+             panel.grid.major = element_blank(), # Removes major grid lines
+             panel.grid.minor = element_blank(), # Removes minor grid lines
+             axis.text.x  = element_text(size=0.005, color='white'), # Makes x-axis text invisible
+             axis.text.y  = element_text(size=0.005, color='white'), # Makes y-axis text invisible
+             axis.line.x = element_line(size = 0.8, linetype = "solid", color="white"), # Makes x-axis line invisible
+             axis.line.y = element_blank(), # Removes y-axis line
+             axis.title.x  = element_text(size=0.005, vjust=0.3, face="plain", color = 'white'), # Makes x-axis title invisible
+             axis.title.y  = element_text(size=0.005, face = "plain", vjust=0.9, angle = 90, colour = 'white'), # Makes y-axis title invisible
+             axis.ticks.x = element_line(color="white"), # Makes x-axis ticks invisible
+             axis.ticks.y = element_line(color="white"), # Makes y-axis ticks invisible
+             panel.border = element_blank(), # Removes panel border
+             panel.spacing = unit(c(0, 0, 0, 0), "null"), # Adjusts panel spacing
+             plot.margin = margin(l = 0,r=0) # Adjusts plot margins
+    )
 
-# Adjusts margins for the forest plot to make room for the p-values plot
-forestlm_ <- forestlm_ + 
-  theme(plot.margin = margin(l = 5, r = -20, t = 10, b = 10, unit = "pt")) 
+    # Adjusts margins for the forest plot to make room for the p-values plot
+    forestlm_ <- forestlm_ + 
+      theme(plot.margin = margin(l = 5, r = -20, t = 10, b = 10, unit = "pt")) 
+    
+    # Adjusts margins for the p-values plot to align it properly with the forest plot
+    p_right <- p_right + 
+      theme(plot.margin = margin(l = -80, r = 80, t = 6, b = 14, unit = "pt"))
+    
+    # Combines the forest plot and the p-values plot side by side with adjusted widths for each
+    grid_name <- plot_grid(forestlm_bysex2, p_right, rel_widths = c(1, 1))
 
-# Adjusts margins for the p-values plot to align it properly with the forest plot
-p_right <- p_right + 
-  theme(plot.margin = margin(l = -80, r = 80, t = 6, b = 14, unit = "pt"))
+#Alluvial plots. Assuming you have done categirisation for contineous variables. In our approach BMI was categorised  
 
-# Combines the forest plot and the p-values plot side by side with adjusted widths for each
-grid_name <- plot_grid(forestlm_bysex2, p_right, rel_widths = c(1, 1))
+    # Read the data
+    data_for_plot <- read.csv('C:/path_to_file/your_data.csv')
+    # Convert sex to a readable format (optional)
+    data_for_plot$Sex <- ifelse(data_for_plot$sex == 0, 'Female', 'Male')
+    
+    # Group and count the data
+    grouped_data <- data_for_plot %>%
+      group_by(BMI_Category, Sex, MRI_Category) %>%
+      summarise(Counts = n(), .groups = 'drop')
+    
+    
+    theme_set(theme_minimal(base_size = 6))
+    
+    # Function to create alluvial plot
+    create_alluvial_plot <- function(data, title) {
+      grouped_data <- data %>%
+        group_by(BMI_Category, MRI_Category) %>%
+        summarise(Counts = n(), .groups = 'drop')
+      
+      ggplot(grouped_data,
+             aes(axis1 = BMI_Category, axis2 = MRI_Category, y = Counts)) +
+        geom_alluvium(aes(fill = BMI_Category)) +
+        geom_stratum() +
+        geom_text(stat = "stratum", aes(label = after_stat(stratum)), size = 6) +
+        theme_minimal() +
+        theme(text = element_text(size = 6),
+              panel.grid.major = element_blank(),  # Remove major grid lines
+              panel.grid.minor = element_blank(),  # Remove minor grid lines
+              panel.background = element_blank()) + # Remove panel background
+        ggtitle(title)
+    }
+    
+    # Filter data for male and female
+    data_male <- data_for_plot[data_for_plot$Sex == 'Male', ]
+    data_female <- data_for_plot[data_for_plot$Sex == 'Female', ]
+    
+    # Create and display the plot for male
+    plot_male <- create_alluvial_plot(data_male, "Alluvial Plot for Female Participants")
+    print(plot_male)
+    
+    # Create and display the plot for female
+    plot_female <- create_alluvial_plot(data_female, "Alluvial Plot for male Participants")
+    print(plot_female)
+    
+    
+    quantiles_info <- data_for_plot %>%
+      group_by(BMI_Category) %>%
+      summarise(
+        Q25 = quantile(Whole_body_fat_mass, 0.25),
+        Median = quantile(Whole_body_fat_mass, 0.5),
+        Q75 = quantile(Whole_body_fat_mass, 0.75)
+      ) %>%
+      ungroup()
+    
+    # Function to create alluvial plot with ordered BMI categories
+    create_alluvial_plot <- function(data, title) {
+      # Convert BMI_Category to a factor with specified levels
+      data$BMI_Category <- factor(data$BMI_Category, levels = c('Normal weight', 'Overweight', 'Obese'))
+      
+      grouped_data <- data %>%
+        group_by(BMI_Category, MRI_Category) %>%
+        summarise(Counts = n(), .groups = 'drop')
+      
+      ggplot(grouped_data,
+             aes(axis1 = BMI_Category, axis2 = MRI_Category, y = Counts)) +
+        geom_alluvium(aes(fill = BMI_Category)) +
+        geom_stratum() +
+        geom_text(stat = "stratum", aes(label = after_stat(stratum)), size = 6) +
+        theme_minimal() +
+        theme(text = element_text(size = 6),
+              panel.grid.major = element_blank(),  # Remove major grid lines
+              panel.grid.minor = element_blank(),  # Remove minor grid lines
+              panel.background = element_blank()) + # Remove panel background
+        ggtitle(title)
+    }
+    
+    # Filter data for male and female
+    data_male <- data_for_plot[data_for_plot$Sex == 'Male', ]
+    data_female <- data_for_plot[data_for_plot$Sex == 'Female', ]
+    
+    # Create and display the plot for male
+    plot_female <- create_alluvial_plot(data_male, "Alluvial Plot for Female Participants")
+    print(plot_female)
+    
+    # Create and display the plot for female
+    plot_male <- create_alluvial_plot(data_female, "Alluvial Plot for Male Participants")
+    print(plot_male)
+    
+    # Recalculate grouped data including Counts for plotting
+    grouped_data <- data_for_plot %>%
+      group_by(Sex, BMI_Category, MRI_Category) %>%
+      summarise(Counts = n(), .groups = 'drop')
+    
+    # Updated function to create alluvial plots with quantiles in titles
+    create_alluvial_plot_with_quantiles <- function(grouped_data, sex, quantiles_info) {
+      # Filter grouped data for the specified sex
+      data_sex <- filter(grouped_data, Sex == sex)
+      
+      # Dynamically generate title with quantiles info
+      title_text <- paste("Alluvial Plot for", sex, "Participants\nQuantiles for Whole Body Fat Mass:",
+                          paste(quantiles_info$BMI_Category, 
+                                "Q25:", quantiles_info$Q25, 
+                                "Median:", quantiles_info$Median, 
+                                "Q75:", quantiles_info$Q75, 
+                                collapse = " | "))
+      
+      # Create the plot
+      plot <- ggplot(data_sex,
+                     aes(axis1 = BMI_Category, axis2 = MRI_Category, y = Counts)) +
+        geom_alluvium(aes(fill = BMI_Category)) +
+        geom_stratum() +
+        geom_text(stat = "stratum", aes(label = after_stat(stratum)), size = 6) +
+        theme_minimal() +
+        theme(text = element_text(size = 6),
+              panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank(),
+              panel.background = element_blank()) +
+        ggtitle(title_text)
+      
+      return(plot)
+    }
+    
+    # Ensure quantiles_info is calculated as shown previously
+    
+    # Create and display the plot for male and female, with quantiles in titles
+    plot_male_with_quantiles <- create_alluvial_plot_with_quantiles(grouped_data, "Male", quantiles_info)
+    plot_female_with_quantiles <- create_alluvial_plot_with_quantiles(grouped_data, "Female", quantiles_info)
+    
+    print(plot_male_with_quantiles)
+    print(plot_female_with_quantiles)
