@@ -20,27 +20,27 @@ variables = ['Visceral_adipose_tissue_volume', 'Subcutaneous_fat_body',
              'Trunk_fat_mass', 'Whole_body_fat_mass', 
              'Total_abdominal_adipose_tissue', 'Muscle_fat_infiltration']
 for var in variables:
-    sns.scatterplot(x='BMI', y=var, hue='sex_', data=data_cleaned)
+    sns.scatterplot(x='BMI', y=var, hue='sex', data=data_cleaned)
     plt.title(f'Scatter Plot of {var} vs BMI')
     plt.savefig(save_dir + f'scatter_{var}_vs_BMI.jpeg')
     plt.show()
 
 # Box Plots for each variable against BMI, colored by sex
 for var in variables:
-    sns.boxplot(x='BMI', y=var, hue='sex_', data=data_cleaned)
+    sns.boxplot(x='BMI', y=var, hue='sex', data=data_cleaned)
     plt.title(f'Box Plot of {var} vs BMI')
     plt.savefig(save_dir + f'box_{var}_vs_BMI.jpeg')
     plt.show()
 
 # Violin Plots for each variable against BMI, colored by sex
 for var in variables:
-    sns.violinplot(x='BMI', y=var, hue='sex_', data=data_cleaned)
+    sns.violinplot(x='BMI', y=var, hue='sex', data=data_cleaned)
     plt.title(f'Violin Plot of {var} vs BMI')
     plt.savefig(save_dir + f'violin_{var}_vs_BMI.jpeg')
     plt.show()
 
 # Pair Plot for all variables colored by sex
-sns.pairplot(data_cleaned, hue='sex_')
+sns.pairplot(data_cleaned, hue='sex')
 plt.savefig(save_dir + 'pairplot_all_variables.jpeg')
 plt.show()
 
@@ -54,7 +54,7 @@ plt.show()
 
 # Faceted Plots using Plotly
 for var in variables:
-    fig = px.scatter(data_cleaned, x='BMI', y=var, facet_col='sex_', trendline='ols')
+    fig = px.scatter(data_cleaned, x='BMI', y=var, facet_col='sex', trendline='ols')
     fig.write_image(save_dir + f'facet_{var}_vs_BMI.jpeg')
     fig.show()
 
