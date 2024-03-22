@@ -147,7 +147,7 @@ for var in variables:
     rcParams['font.size'] = 6
     rcParams['pdf.fonttype'] = 42  # This ensures fonts are stored as text in PDFs, making them editable in Illustrator
     
-    # Replace 'path/to/your/dataset.csv' with the actual path to your dataset file
+    # Replace 'your_data_path' with the actual path to your dataset file
     df = pd.read_csv('C:/your_data_path')
     df = df.dropna()
     
