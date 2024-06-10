@@ -10,4 +10,4 @@ Folder contains script describing approach used for reclassification of the BMI 
 
 * [**Statistical analysis**](https://github.com/ImperialCollegeLondon/adiposity_aging/tree/main/statistical_analysis)
 
-This folder contains scripts for creating observational and descriptive plots and tables used in this paper
+This folder contains scripts for creating plots used for exploratory analysis 
