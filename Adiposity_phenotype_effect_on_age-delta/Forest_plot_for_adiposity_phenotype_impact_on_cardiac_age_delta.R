@@ -18,17 +18,17 @@ library(ggpubr)
 df.sc <- read_csv("your data.csv") %>% na.omit()
 
 # Analyze the effect of adiposity phenotypes, age, age squared, and sex-specific BMI interaction on cardiovascular aging using linear regression
-fitobes <- lm(ca_delta ~ adiposity phenotype of choice + age_at_mri + poly(age_at_mri, 2) + sex_BMI, fat.peri)
+fitobes <- lm(ca_delta ~ adiposity phenotype of choice + age_at_mri + poly(age_at_mri, 2) + Sex, your data.csv)
 summary(fitobes) # Display summary statistics of the model
 confint(fitobes, level = .95) # Display 95% confidence intervals for model coefficients
 
 # Perform the same analysis focusing only on females
-fitobes_female <- lm(ca_delta ~ poly(age_at_mri, 2) + sex_BMI*BMI, fat.peri) # Interaction term considers sex-specific effect
+fitobes_female <- lm(ca_delta ~ poly(age_at_mri, 2) + Sex*adiposity phenotype of choice, your data.csv) # Interaction term considers sex-specific effect
 summary(fitobes_female) # Summary for female-specific model
 confint(fitobes_female, level = .95) # 95% confidence intervals for female-specific model
 
 # Perform the analysis focusing only on males
-fitobes_male <- lm(ca_delta ~ poly(age_at_mri, 2) + I(1-sex_BMI)*BMI, fat.peri) # Interaction term adjusted for males
+fitobes_male <- lm(ca_delta ~ poly(age_at_mri, 2) + I(1-Sex)*adiposity phenotype of choice, your data.csv) # Interaction term adjusted for males
 summary(fitobes_male) # Summary for male-specific model
 confint(fitobes_male, level = .95) # 95% confidence intervals for male-specific model
 # Note: Complete analysis sequence for each adiposity phenotype
@@ -80,7 +80,7 @@ forestlm_ <- ggplot(lm_intermediate_overall, aes(x = term, y = estimate, ymin = 
   )
 
 # Print the forest plot
-print(forestlm_bysex2)
+print(forestlm_bysex)
 
 # Creates a second plot for displaying p-values and confidence intervals next to the forest plot
 # Assumes 'lm_intermediate_overall' dataset and uses the 'term' as x-axis and an arbitrary y-axis position for labels
@@ -116,4 +116,4 @@ p_right <- p_right +
   theme(plot.margin = margin(l = -80, r = 80, t = 6, b = 14, unit = "pt"))
 
 # Combines the forest plot and the p-values plot side by side with adjusted widths for each
-grid_name <- plot_grid(forestlm_bysex2, p_right, rel_widths = c(1, 1))
+grid_name <- plot_grid(forestlm_bysex, p_right, rel_widths = c(1, 1))
