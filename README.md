@@ -7,3 +7,7 @@ The script is used to create multiple linear models, group results, and produce 
 * [**Approach for reclassification of the BMI scale based on MRI-derived body fat**](https://github.com/ImperialCollegeLondon/adiposity_aging/tree/main/BMI_reclassification_approach)
   
 Folder contains script describing approach used for reclassification of the BMI scale using body fat measures from MRI scans and script for presenting results as an alluvial diagram. 
+
+* [**Statistical analysis**](https://github.com/ImperialCollegeLondon/adiposity_aging/tree/main/statistical_analysis)
+
+This folder contains scripts for creating observational and descriptive plots and tables used in this paper
