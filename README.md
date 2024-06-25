@@ -1,4 +1,4 @@
-# Sex differences in fat distribution affect cardiovascular ageing
+# Body fat and human cardiovascular ageing
 
 * [**Assessment of adiposity phenotype effect on cardiovascular age delta**](https://github.com/ImperialCollegeLondon/adiposity_aging/tree/main/Adiposity_phenotype_effect_on_age-delta)
 
@@ -11,3 +11,8 @@ Folder contains script describing approach used for reclassification of the BMI 
 * [**Statistical analysis**](https://github.com/ImperialCollegeLondon/adiposity_aging/tree/main/statistical_analysis)
 
 This folder contains scripts for creating plots used for exploratory analysis 
+
+## Citation 
+
+
+Losev V, Lu C, Senevirathne D, Inglese P, King AP, Shah M, de Marvao A, O’Regan DP. Body fat and human cardiovascular ageing. _medRxiv_. 2024
