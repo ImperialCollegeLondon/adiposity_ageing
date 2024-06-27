@@ -15,4 +15,4 @@ This folder contains scripts for creating plots used for exploratory analysis
 ## Citation 
 
 
-Losev V, Lu C, Senevirathne D, Inglese P, King AP, Shah M, de Marvao A, O’Regan DP. Body fat and human cardiovascular ageing. _medRxiv_. 2024
+Losev V, Lu C, Senevirathne D, Inglese P, Bai W, King AP, Shah M, de Marvao A, O’Regan DP. Body fat and human cardiovascular ageing. _medRxiv_. 2024
